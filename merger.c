@@ -14,7 +14,13 @@ int main(int argc, char const *argv[])
         printf("ASCII files must be squared, and must follow nameconvention: part_x_y...\n");
         exit(EXIT_FAILURE);
     }
-    const char *folder = argv[1];
+    char *folder;
+    if (!(argv[1][strlen(argv[1])-1] == '/')) {
+        folder = concat(argv[1],"/");
+    }
+    else {
+        folder = concat(argv[1],"");
+    }
     const char *outputfile = "output.txt";
     if (argc >= 3)
         outputfile = argv[2];
@@ -64,21 +70,21 @@ int main(int argc, char const *argv[])
     printf("Completed: %s\n", outputfile);
 
     //Show running statistics
-    printf("size per frame: %zu\n", strlen(outputfiledata[0]));
-    printf("Frame width: %i, Frame Height: %i, width: %i, height: %i\n", mx + 1, my + 1, TOTAL_WIDTH, totalrows);
-    printf("totalrows per sheet:%i\n", totalrows/(my+1)); /* stuff to do! */
-
+    printf("farme-size: %zu, frame-rows:%i, frame-width:%i\n", strlen(outputfiledata[0]),totalrows/(my+1),FRAME_WIDTH);
+    printf("frame-x-count: %i, frame-y-count: %i, image-width: %i, image-height: %i\n", mx + 1, my + 1, TOTAL_WIDTH, totalrows);
+    
+    //end timer
+    gettimeofday(&tv2, NULL);
+    printf("Total time spent puzzling together %s: %f seconds\n", folder,
+           (double)(tv2.tv_usec - tv1.tv_usec) / 1000000 +
+               (double)(tv2.tv_sec - tv1.tv_sec));
+    
     //Free up memory
     for (int m = 0; m < filecount; m++)
     {
         free(outputfiledata[m]);
         free(files[m]);
     }
-    free(files);
-    //end timer
-    gettimeofday(&tv2, NULL);
-    printf("Total time spent puzzling together %s: %f seconds\n", folder,
-           (double)(tv2.tv_usec - tv1.tv_usec) / 1000000 +
-               (double)(tv2.tv_sec - tv1.tv_sec));
-    return 0;
+    free(folder);
+    free(files);return 0;
 }
