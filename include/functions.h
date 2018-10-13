@@ -6,9 +6,10 @@ typedef struct POSITION {
 } POSITION;
 
 //File operations
+int getfilesize(const char* filename);
 void readFile(const char* fileName, char* fcontent);
 void getfiles(char*** files,int* count, const char * directory);
-void load_in_order(int mx, int my, char ** files, int filecount,const char* folder, char * outputfiledata[], POSITION pos[]);
+void load_in_order(int mx, int my, char ** files, int filecount,const char* folder, char * outputfiledata[], int filesize,POSITION pos[]);
 //Math operations
 int max_x(const POSITION a[], int n);
 int max_y(const POSITION a[], int n);

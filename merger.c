@@ -40,12 +40,13 @@ int main(int argc, char const *argv[])
     
     int TOTAL_WIDTH = FRAME_WIDTH * (mx+1);
 
-    //allocate the file contents
-    char * outputfiledata[my+1];
-    //outputfiledata = malloc(sizeof(char**)*filecount);
-
+    //allocate the array of pointers to file contents
+    char * outputfiledata[(mx+1)*(my+1)];
+    
+    char * templatefile = concat(folder,files[0]);
+    int filesize = getfilesize(templatefile);
     //Load the files into outputfiledata, in the sequence we want
-    load_in_order(mx,my,files,filecount,folder,outputfiledata,pos);
+    load_in_order(mx,my,files,filecount,folder,outputfiledata,filesize,pos);
 
     //output data is now in correct order, start merge
     int row; 
