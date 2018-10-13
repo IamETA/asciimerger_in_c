@@ -2,7 +2,9 @@
 CC = gcc
 
 #Flags
-CFLAGS = -g -Wall -O3 -Wextra
+CFLAGS = -g -Wall -Wextra
+DFLAGS = -O0
+RFLAGS = -O0
 
 #OBJ folder
 OBJDIR = obj
@@ -13,7 +15,7 @@ TARGET = merger
 #all: $(TARGET)
 
 $(TARGET): merger.o functions.o
-	$(CC) $(CFLAGS) -o $(TARGET) merger.o functions.o -lm
+	$(CC) $(CFLAGS) $(RFLAGS) -o $(TARGET) merger.o functions.o -lm
 
 merger.o: merger.c
 	$(CC) $(CFLAGS) -c -o merger.o merger.c
