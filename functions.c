@@ -10,6 +10,8 @@ typedef struct POSITION {
 } POSITION;
 
 extern char *strdup(const char *src);
+char* concat(const char *s1, const char *s2);
+
 void readFile(const char *fileName, char * fcontent)
 {
     //char** fcontent = malloc(sizeof(char*));
@@ -60,8 +62,32 @@ void getfiles(char ***files, int *count, const char *directory)
     free(epdf);
 }
 
-//Math :)
+//Merger 
+void load_in_order(int mx, int my, char ** files, int filecount,const char* folder, char * outputfiledata[], POSITION pos[]) {
+    //load the files in the order we want
+    //we want to load the vertical files after the horizontal
+    int order = 0;
+    for (int y=0;y<=my;y++) {
+        for (int x=0;x<=mx;x++) {
+            for (int i=0;i<filecount;i++) {
+                if (pos[i].y == y && pos[i].x == x) {
+                    //get the full filepath
+                    char * fullfilepath = concat(folder,files[i]);
+                    free(files[i]);
+                    //char * content = malloc(sizeof(char)*901);
+                    outputfiledata[i] = malloc(sizeof(char)*900 + 1);
+                    printf("Reading file %s\n",fullfilepath);
+                    readFile(fullfilepath,outputfiledata[i]);
+                    outputfiledata[i][900] = '\0';
+                    free(fullfilepath);
+                    order++;
+                }
+            }
+        }
+    }
+}
 
+//Math operations
 //Get the max x value of POSITION
 int max_x(const POSITION * a, int n) {
   int c, max;
@@ -89,6 +115,7 @@ int max_y(const POSITION a[], int n) {
  
   return max;
 }
+
 //String operations
 //Combine
 char* concat(const char *s1, const char *s2)
