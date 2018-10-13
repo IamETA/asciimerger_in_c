@@ -13,7 +13,6 @@ int main(int argc, char const *argv[])
     const char* folder = argv[1];
     const char* outputfile = "output.txt";
     if (argc >= 3) outputfile = argv[2];
-    //else outputfile = "output.txt";
 
     char** files = NULL;
     int filecount = 0; 

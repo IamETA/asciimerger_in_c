@@ -18,7 +18,6 @@ int getfilesize(const char* filename) {
 }
 void readfromfile(const char *fileName, char * fcontent)
 {
-    //char** fcontent = malloc(sizeof(char*));
     FILE *fp = fopen(fileName, "r");
     size_t len = 0;
     
@@ -37,13 +36,12 @@ void readfromfile(const char *fileName, char * fcontent)
     fcontent[len] = '\0';
     fclose(fp);
 }
+
 //Get files in directory
 void getfiles(char ***files, int *count, const char *directory)
 {
-    //*files = malloc(sizeof(char*) +1);
-    //int fileSize = 50;
     DIR *dpdf;
-     struct dirent *epdf;
+    struct dirent *epdf;
     dpdf = opendir(directory);
     if (dpdf == NULL)
         exit(EXIT_FAILURE);
@@ -53,7 +51,7 @@ void getfiles(char ***files, int *count, const char *directory)
     while ((epdf = readdir(dpdf)))
     {
         //Dropping two bytes in 2 blocks somewhere in this code, don't know where.
-        char *directoryName = malloc(sizeof(char)); //= epdf->d_name; //tried pointing to this, but that didnt work well
+        char *directoryName = malloc(strlen(epdf->d_name)+1); //= epdf->d_name; //tried pointing to this, but that didnt work well
         strcpy(directoryName,epdf->d_name);
         if ((directoryName[0] != '.'))
         {
