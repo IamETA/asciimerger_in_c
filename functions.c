@@ -7,7 +7,6 @@
 
 extern char *strdup(const char *src);
 
-
 int getfilesize(const char* filename) {
     FILE *fp = fopen(filename,"r");
     if (fp==NULL)

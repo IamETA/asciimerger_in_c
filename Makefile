@@ -1,8 +1,8 @@
-# ChooseCompiler g++ for C++
+# set compiler: g++ for C++
 CC = gcc
 
 #Flags
-CFLAGS = -g -Wall -O0 -Wextra
+CFLAGS = -g -Wall -O3 -Wextra
 
 #OBJ folder
 OBJDIR = obj
