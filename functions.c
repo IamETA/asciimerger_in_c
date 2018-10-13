@@ -72,7 +72,7 @@ void getfiles(char ***files, int *count, const char *directory)
 }
 
 //Merger 
-void load_in_order(int mx, int my, char ** files, int filecount,const char* folder, char * outputfiledata[],int filesize, POSITION pos[]) {
+void load_in_order(int mx, int my, const char ** files, int filecount,const char* folder, char * outputfiledata[],int filesize, POSITION pos[]) {
     //load the files in the order we want
     //we want to load the vertical files after the horizontal
     int order = 0;
@@ -82,7 +82,6 @@ void load_in_order(int mx, int my, char ** files, int filecount,const char* fold
                 if (pos[i].y == y && pos[i].x == x) {
                     //get the full filepath
                     char * fullfilepath = concat(folder,files[i]);
-                    free(files[i]);
                     outputfiledata[order] = malloc(sizeof(char)*filesize + 1);
                     printf("Reading file %s\n",fullfilepath);
                     readFile(fullfilepath,outputfiledata[order]);
