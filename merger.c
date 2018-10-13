@@ -4,7 +4,6 @@
 #include <math.h>
 #include <sys/time.h>
 #include "include/functions.h"
-
 int main(int argc, char const *argv[])
 {
     struct timeval tv1, tv2;
@@ -24,7 +23,7 @@ int main(int argc, char const *argv[])
     int filecount = 0;
     printf("Enumerating files in folder: %s\n", folder);
     getfiles(&files, &filecount, folder);
-    if (filecount <= 0)
+    if (filecount == 0)
     {
         printf("Empty folder: %s", folder);
         exit(EXIT_FAILURE);
@@ -33,22 +32,14 @@ int main(int argc, char const *argv[])
 
     //map the filenames to positions
     POSITION pos[filecount];
-    for (int i = 0; i < filecount; i++)
-    {
-        const char *currentfile = files[i];
-        //read positions
-        //Future version: find first integer in string
-        pos[i].x = atoi(&currentfile[5]);
-        //Future version: find second integer in string
-        pos[i].y = atoi(&currentfile[7]);
+    mapfilepositions(pos,filecount,files);
 
-        //Confirm positions
-        printf("%s positions -> x: %i y: %i \n", currentfile, pos[i].x, pos[i].y);
-    }
-    //get the size of the FRAMES
+    //get the size of the FRAMES, 
+    //use first file as size template
     char *templatefile = concat(folder, files[0]);
     const int filesize = getfilesize(templatefile);
     free(templatefile);
+
     //Calculate the framewidth based on
     //the square root, this way we'll have an even
     //matrix. add error handling later.
@@ -69,43 +60,13 @@ int main(int argc, char const *argv[])
     load_in_order(mx, my, files, filecount, folder, outputfiledata, filesize, pos);
 
     //output data is now in correct order, start merge
-
-    //Calculate the rows we need to loop for writing
-    int totalrows = strlen(outputfiledata[0]) / (FRAME_WIDTH);
-    int row;       //the byte position of row
-    int page = -1; //Page multiplier
-
-    FILE *fp;
-    fp = fopen(outputfile, "w+");
-    if (fp == NULL)
-        exit(EXIT_FAILURE);
-
-    for (int y = 0; y < totalrows * (my + 1); y++)
-    {
-        int pager = y % FRAME_WIDTH;
-        if (pager == 0)
-            page++;
-
-        row = y % FRAME_WIDTH * (TOTAL_WIDTH / (mx + 1));
-        int cpos = (page * (mx + 1));
-        for (int fileindex = cpos; fileindex < cpos + (mx + 1); fileindex++)
-        {
-            for (int i = row; i < (row + FRAME_WIDTH); i++)
-            {
-                printf("%c", outputfiledata[fileindex][i]);
-                fputc(outputfiledata[fileindex][i], fp);
-            }
-        }
-        printf("\n");
-        fputc('\n', fp);
-    }
-    fclose(fp);
+    int totalrows = merge(outputfiledata,outputfile,TOTAL_WIDTH,FRAME_WIDTH,mx,my);
     printf("Completed: %s\n", outputfile);
 
     //Show running statistics
     printf("size per frame: %zu\n", strlen(outputfiledata[0]));
-    printf("Frame width: %i, Frame Height: %i, width: %i, height: %i\n", mx + 1, my + 1, TOTAL_WIDTH, totalrows * (my + 1));
-    printf("totalrows per sheet:%i\n", totalrows); /* stuff to do! */
+    printf("Frame width: %i, Frame Height: %i, width: %i, height: %i\n", mx + 1, my + 1, TOTAL_WIDTH, totalrows);
+    printf("totalrows per sheet:%i\n", totalrows/(my+1)); /* stuff to do! */
 
     //Free up memory
     for (int m = 0; m < filecount; m++)

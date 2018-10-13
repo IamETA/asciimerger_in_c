@@ -5,7 +5,9 @@ typedef struct POSITION
     int x;
     int y;
 } POSITION;
-
+//Merger operations
+void mapfilepositions(POSITION pos[],int filecount, char ** files);
+int merge(char **outputfiledata,const char* outputfile, int TOTAL_WIDTH, int FRAME_WIDTH,int mx,int my);
 //File operations
 int getfilesize(const char *filename);
 void readfromfile(const char *fileName, char *fcontent);

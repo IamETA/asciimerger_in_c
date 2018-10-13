@@ -6,7 +6,56 @@
 #include "include/functions.h"
 
 extern char *strdup(const char *src);
+//Merger operations
+void mapfilepositions(POSITION pos[],int filecount, char ** files) {
+    for (int i = 0; i < filecount; i++)
+    {
+        const char *currentfile = files[i];
+        //read positions
+        //Future version: find first integer in string
+        pos[i].x = atoi(&currentfile[5]);
+        //Future version: find second integer in string
+        pos[i].y = atoi(&currentfile[7]);
 
+        //Confirm positions
+        printf("%s positions -> x: %i y: %i \n", currentfile, pos[i].x, pos[i].y);
+    }
+}
+
+int merge(char **outputfiledata,const char* outputfile, int TOTAL_WIDTH, int FRAME_WIDTH,int mx,int my) {
+      //Calculate the rows we need to loop for writing
+    int totalrows = strlen(outputfiledata[0]) / (FRAME_WIDTH) * (my+1);
+    int row;       //the byte position of row
+    int page = -1; //Page multiplier
+
+    FILE *fp;
+    fp = fopen(outputfile, "w+");
+    if (fp == NULL)
+        exit(EXIT_FAILURE);
+    for (int y = 0; y < totalrows; y++)
+    {
+        printf("%i: ",y+1);
+        int pager = y % FRAME_WIDTH;
+        if (pager == 0)
+            page++;
+
+        row = y % FRAME_WIDTH * (TOTAL_WIDTH / (mx + 1));
+        int cpos = (page * (mx + 1));
+        for (int fileindex = cpos; fileindex < cpos + (mx + 1); fileindex++)
+        {
+            for (int i = row; i < (row + FRAME_WIDTH); i++)
+            {
+                printf("%c", outputfiledata[fileindex][i]);
+                fputc(outputfiledata[fileindex][i], fp);
+            }
+        }
+        printf("\n");
+        fputc('\n', fp);
+    }
+    fclose(fp);  
+    return totalrows; //return total rows written
+}
+//String operations
 int getfilesize(const char *filename)
 {
     FILE *fp = fopen(filename, "r");
