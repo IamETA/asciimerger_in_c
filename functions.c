@@ -3,14 +3,10 @@
 #include <stdbool.h>
 #include <dirent.h>
 #include <string.h>
-
-typedef struct POSITION {
-    int x;
-    int y;
-} POSITION;
+#include "include/functions.h"
 
 extern char *strdup(const char *src);
-char* concat(const char *s1, const char *s2);
+
 
 int getfilesize(const char* filename) {
     FILE *fp = fopen(filename,"r");
@@ -21,7 +17,7 @@ int getfilesize(const char* filename) {
     fclose(fp);
     return size;
 }
-void readFile(const char *fileName, char * fcontent)
+void readfromfile(const char *fileName, char * fcontent)
 {
     //char** fcontent = malloc(sizeof(char*));
     FILE *fp = fopen(fileName, "r");
@@ -76,7 +72,8 @@ void getfiles(char ***files, int *count, const char *directory)
 }
 
 //Merger 
-void load_in_order(int mx, int my, const char ** files, int filecount,const char* folder, char * outputfiledata[],int filesize, POSITION pos[]) {
+void load_in_order(int mx, int my, char ** files, int filecount,const char* folder, char * outputfiledata[],int filesize, POSITION pos[]) 
+{
     //load the files in the order we want
     //we want to load the vertical files after the horizontal
     int order = 0;
@@ -88,7 +85,7 @@ void load_in_order(int mx, int my, const char ** files, int filecount,const char
                     char * fullfilepath = concat(folder,files[i]);
                     outputfiledata[order] = malloc(sizeof(char)*filesize + 1);
                     printf("Reading file %s\n",fullfilepath);
-                    readFile(fullfilepath,outputfiledata[order]);
+                    readfromfile(fullfilepath,outputfiledata[order]);
                     free(fullfilepath);
                     order++;
                 }
@@ -109,7 +106,6 @@ int max_x(const POSITION * a, int n) {
        max = a[c].x;
     }
   }
- 
   return max;
 }
 
@@ -122,7 +118,6 @@ int max_y(const POSITION a[], int n) {
        max = a[c].y;
     }
   }
- 
   return max;
 }
 
