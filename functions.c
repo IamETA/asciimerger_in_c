@@ -45,10 +45,10 @@ void readFile(const char *fileName, char * fcontent)
 //Get files in directory
 void getfiles(char ***files, int *count, const char *directory)
 {
-    *files = malloc(sizeof(char*) +1);
+    //*files = malloc(sizeof(char*) +1);
     //int fileSize = 50;
     DIR *dpdf;
-    struct dirent *epdf;
+     struct dirent *epdf;
     dpdf = opendir(directory);
     if (dpdf == NULL)
         exit(EXIT_FAILURE);
@@ -57,7 +57,8 @@ void getfiles(char ***files, int *count, const char *directory)
     int fileCount = 0;
     while ((epdf = readdir(dpdf)))
     {
-        char *directoryName = malloc(sizeof(char*)); //= epdf->d_name; //tried pointing to this, but that didnt work well
+        //Dropping two bytes in 2 blocks somewhere in this code, don't know where.
+        char *directoryName = malloc(sizeof(char)); //= epdf->d_name; //tried pointing to this, but that didnt work well
         strcpy(directoryName,epdf->d_name);
         if ((directoryName[0] != '.'))
         {
@@ -65,10 +66,13 @@ void getfiles(char ***files, int *count, const char *directory)
             (*files)[fileCount++] = directoryName;
             printf("Found: %s\n", (*files)[fileCount-1]);
         }
+        else {
+            //Free the unwanted directories
+            free(directoryName);
+        }
     }
     (*count) = fileCount;
     closedir(dpdf);
-    free(epdf);
 }
 
 //Merger 

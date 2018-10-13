@@ -95,6 +95,6 @@ int main(int argc, char const *argv[])
         free(files[m]);
     }
     free(files);
-    printf("Completed: %s", outputfile);
+    printf("Completed: %s\n", outputfile);
     return 0;
 }
